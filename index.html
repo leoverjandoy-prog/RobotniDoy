@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOY Robot - Complete App Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0f;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .app-title h1 {
+            font-size: 36px;
+            background: linear-gradient(90deg, #00d4aa, #00bcd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .app-title p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .device-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 800px;
+            background: #1a1a2e;
+            border-radius: 40px;
+            border: 12px solid #2d2d44;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .splash-logo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00d4aa 0%, #00695c 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 80px;
+            box-shadow: 0 0 60px rgba(0, 212, 170, 0.5);
+            animation: pulse 2s infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(0, 212, 170, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 80px rgba(0, 212, 170, 0.8); }
+        }
+
+        .splash-title {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+        }
+
+        .greeting-box {
+            padding: 25px 40px;
+            border: 2px solid #00d4aa;
+            border-radius: 20px;
+            background: rgba(0, 212, 170, 0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .greeting-text {
+            font-size: 28px;
+            color: #00d4aa;
+            font-weight: bold;
+        }
+
+        /* Onboarding Screen */
+        .onboarding-content {
+            padding: 40px 30px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .onboarding-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .onboarding-subtitle {
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .preview-box {
+            padding: 30px;
+            border: 2px solid #00d4aa;
+            border-radius: 20px;
+            background: rgba(0, 212, 170, 0.05);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .preview-label {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .preview-greeting {
+            font-size: 24px;
+            color: #00d4aa;
+            font-weight: bold;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #00d4aa;
+            border-radius: 15px;
+            background: transparent;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .input-field:focus {
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 20px;
+            border-radius: 15px;
+            border: none;
+            background: linear-gradient(90deg, #00d4aa, #00bcd4);
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+        }
+
+        /* Lobby Screen */
+        .lobby-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #00d4aa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background: #0a0a0f;
+        }
+
+        .profile-info h3 {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .profile-info p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .stats-badge {
+            display: flex;
+            gap: 15px;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .robot-display {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .robot-container {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,212,170,0.2) 0%, transparent 70%);
+            border: 3px solid rgba(0, 212, 170, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 80px rgba(0, 212, 170, 0.3);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .robot-emoji {
+            font-size: 100px;
+            margin-bottom: 10px;
+        }
+
+        .robot-name {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00d4aa, #00bcd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .menu-btn {
+            padding: 25px 15px;
+            border-radius: 20px;
+            border: 2px solid;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .menu-btn.talk {
+            border-color: #00d4aa;
+            background: linear-gradient(135deg, rgba(0,212,170,0.2), transparent);
+        }
+
+        .menu-btn.battle {
+            border-color: #ff4757;
+            background: linear-gradient(135deg, rgba(255,71,87,0.2), transparent);
+        }
+
+        .menu-btn.care {
+            border-color: #ffa502;
+            background: linear-gradient(135deg, rgba(255,165,2,0.2), transparent);
+        }
+
+        .menu-btn.settings {
+            border-color: #747d8c;
+            background: linear-gradient(135deg, rgba(116,125,140,0.2), transparent);
+        }
+
+        .menu-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .menu-label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Talk Screen - Looi Style */
+        .talk-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .looi-face {
+            height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(0,212,170,0.3) 0%, transparent 60%);
+        }
+
+        .face-container {
+            width: 280px;
+            height: 280px;
+            position: relative;
+        }
+
+        .eyes-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        .looi-eye {
+            width: 90px;
+            height: 120px;
+            background: linear-gradient(180deg, #00d4aa, #0097a7);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(0, 212, 170, 0.6);
+            position: relative;
+            animation: blink 4s infinite;
+        }
+
+        @keyframes blink {
+            0%, 96%, 100% { transform: scaleY(1); }
+            98% { transform: scaleY(0.1); }
+        }
+
+        .looi-eye::after {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: #000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .looi-mouth {
+            width: 70px;
+            height: 35px;
+            background: #ff6b6b;
+            border-radius: 0 0 35px 35px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            animation: mouthMove 0.5s infinite alternate;
+        }
+
+        @keyframes mouthMove {
+            from { height: 35px; }
+            to { height: 45px; }
+        }
+
+        .chat-area {
+            margin: 20px;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            border: 2px solid rgba(0, 212, 170, 0.3);
+            min-height: 120px;
+        }
+
+        .chat-text {
+            font-size: 20px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .controls {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .mic-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4aa, #00bcd4);
+            border: none;
+            font-size: 36px;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(0, 212, 170, 0.4);
+            transition: all 0.3s;
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mic-btn.listening {
+            background: linear-gradient(135deg, #ff4757, #ff6348);
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(255, 71, 87, 0); }
+        }
+
+        /* Battle Screen */
+        .battle-arena {
+            height: 300px;
+            background: linear-gradient(180deg, #2c3e50 0%, #000 100%);
+            position: relative;
+            margin: 10px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0,212,170,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,170,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .battle-robot {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+        }
+
+        .battle-robot.player {
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00d4aa, #00695c);
+            box-shadow: 0 0 40px rgba(0, 212, 170, 0.6);
+        }
+
+        .battle-robot.opponent {
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff4757, #8b0000);
+            box-shadow: 0 0 40px rgba(255, 71, 87, 0.6);
+        }
+
+        .vs-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,0,0,0.8);
+            padding: 10px 30px;
+            border-radius: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .health-bars {
+            padding: 15px 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .health-bar {
+            flex: 1;
+        }
+
+        .health-label {
+            font-size: 12px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .health-track {
+            height: 15px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+
+        .controller {
+            padding: 20px;
+            background: #1a1a2e;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .turn-indicator {
+            text-align: center;
+            padding: 10px;
+            background: #00d4aa;
+            color: #000;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .energy-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .energy-track {
+            flex: 1;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .energy-fill {
+            height: 100%;
+            background: #ffd700;
+            width: 60%;
+        }
+
+        .attack-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+
+        .attack-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            transition: all 0.3s;
+        }
+
+        .attack-btn.light {
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+
+        .attack-btn.heavy {
+            border-color: #ff8c00;
+            color: #ff8c00;
+        }
+
+        .attack-btn.special {
+            border-color: #9370db;
+            color: #9370db;
+        }
+
+        .attack-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .defense-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .defense-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px solid #4169e1;
+            background: rgba(65,105,225,0.2);
+            color: #4169e1;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Maintenance Screen */
+        .maintenance-header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .robot-stage {
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .robot-avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0f);
+            border: 4px solid #00d4aa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 80px;
+            box-shadow: 0 0 60px rgba(0, 212, 170, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .xp-ring {
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            border: 6px solid transparent;
+            border-top-color: #ffd700;
+            border-right-color: #ffd700;
+            transform: rotate(-45deg);
+        }
+
+        .stats-section {
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+        }
+
+        .stat-name {
+            width: 80px;
+            font-size: 14px;
+        }
+
+        .stat-bar-bg {
+            flex: 1;
+            height: 12px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+        }
+
+        .action-btn.feed .action-icon {
+            background: rgba(255,152,0,0.2);
+            border: 2px solid #ff9800;
+        }
+
+        .action-btn.play .action-icon {
+            background: rgba(233,30,99,0.2);
+            border: 2px solid #e91e63;
+        }
+
+        .action-btn.sleep .action-icon {
+            background: rgba(156,39,176,0.2);
+            border: 2px solid #9c27b0;
+        }
+
+        .action-btn.style .action-icon {
+            background: rgba(33,150,243,0.2);
+            border: 2px solid #2196f3;
+        }
+
+        /* Wardrobe Screen */
+        .wardrobe-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .coin-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: rgba(255,215,0,0.2);
+            border-radius: 20px;
+            border: 1px solid #ffd700;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px 15px;
+            overflow-x: auto;
+        }
+
+        .category-tab {
+            padding: 12px 20px;
+            border-radius: 15px;
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .category-tab.active {
+            background: rgba(0,212,170,0.2);
+            border-color: #00d4aa;
+            color: #00d4aa;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 0 20px 20px;
+        }
+
+        .item-card {
+            aspect-ratio: 0.75;
+            border-radius: 15px;
+            background: #1a1a2e;
+            border: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding: 10px;
+        }
+
+        .item-card.unlocked {
+            border-color: rgba(0,212,170,0.3);
+        }
+
+        .item-card.equipped {
+            border-color: #00d4aa;
+            background: rgba(0,212,170,0.1);
+        }
+
+        .item-card.locked {
+            opacity: 0.5;
+        }
+
+        .item-emoji {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .item-name {
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .item-level {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 10px;
+            color: #ff4757;
+        }
+
+        .equipped-badge {
+            position: absolute;
+            bottom: 5px;
+            padding: 3px 8px;
+            background: #00d4aa;
+            color: #000;
+            font-size: 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* Settings Screen */
+        .settings-list {
+            padding: 20px;
+        }
+
+        .setting-card {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .setting-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .setting-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(0,212,170,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .setting-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .setting-desc {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .setting-control {
+            margin-top: 15px;
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 30px;
+            background: #333;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: #00d4aa;
+        }
+
+        .toggle-knob {
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-knob {
+            transform: translateX(30px);
+        }
+
+        /* Navigation Dots */
+        .nav-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+        }
+
+        .nav-dot.active {
+            background: #00d4aa;
+        }
+
+        /* Preview Controls */
+        .preview-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preview-btn {
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid #00d4aa;
+            background: transparent;
+            color: #00d4aa;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .preview-btn:hover, .preview-btn.active {
+            background: #00d4aa;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-title">
+        <h1>🤖 DOY ROBOT</h1>
+        <p>Complete Application Preview • Click buttons to navigate</p>
+    </div>
+
+    <div class="device-frame">
+        <!-- Screen 1: Splash -->
+        <div class="screen splash-screen active" id="splash">
+            <div class="splash-logo">🤖</div>
+            <div class="splash-title">DOY ROBOT</div>
+            <div class="greeting-box">
+                <div class="preview-label" style="color: #888; margin-bottom: 10px;">Welcome Greeting</div>
+                <div class="greeting-text" id="splashGreeting">Hello Boss</div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Onboarding -->
+        <div class="screen" id="onboarding">
+            <div class="onboarding-content">
+                <h2 class="onboarding-title">Welcome to DOY</h2>
+                <p class="onboarding-subtitle">Set your personal greeting. This will appear every time you open the app forever.</p>
+                
+                <div class="preview-box">
+                    <div class="preview-label">Preview</div>
+                    <div class="preview-greeting" id="previewGreeting">Hello Boss</div>
+                </div>
+                
+                <input type="text" class="input-field" id="greetingInput" value="Hello Boss" 
+                       oninput="updateGreeting(this.value)">
+                
+                <button class="btn-primary" onclick="saveGreeting()">
+                    SAVE & CONTINUE
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Lobby -->
+        <div class="screen" id="lobby">
+            <div class="lobby-header">
+                <div class="profile-section" onclick="goToScreen('settings')">
+                    <div class="profile-avatar">👤</div>
+                    <div class="profile-info">
+                        <h3>Welcome,</h3>
+                        <p id="userName">Boss</p>
+                    </div>
+                </div>
+                <div class="stats-badge">
+                    <div class="stat-item">
+                        <span>⭐</span>
+                        <span>Lvl 5</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>🪙</span>
+                        <span>1,250</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="robot-display">
+                <div class="robot-container">
+                    <div class="robot-emoji" id="robotEmoji">🤖</div>
+                    <div class="robot-name" id="robotName">DOY</div>
+                </div>
+            </div>
+            
+            <div class="menu-grid">
+                <div class="menu-btn talk" onclick="goToScreen('talk')">
+                    <div class="menu-icon" style="color: #00d4aa;">💬</div>
+                    <div class="menu-label" style="color: #00d4aa;">Talk to My Robot</div>
+                </div>
+                <div class="menu-btn battle" onclick="goToScreen('battle')">
+                    <div class="menu-icon" style="color: #ff4757;">⚔️</div>
+                    <div class="menu-label" style="color: #ff4757;">Battle Online</div>
+                </div>
+                <div class="menu-btn care" onclick="goToScreen('maintenance')">
+                    <div class="menu-icon" style="color: #ffa502;">❤️</div>
+                    <div class="menu-label" style="color: #ffa502;">Robot Care</div>
+                </div>
+                <div class="menu-btn settings" onclick="goToScreen('settings')">
+                    <div class="menu-icon" style="color: #747d8c;">⚙️</div>
+                    <div class="menu-label" style="color: #747d8c;">Settings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Talk (Looi Style) -->
+        <div class="screen" id="talk">
+            <div class="talk-header">
+                <button class="back-btn" onclick="goToScreen('lobby')">←</button>
+                <h3>Talking to <span class="robot-name">DOY</span></h3>
+                <button class="back-btn" onclick="alert('Camera feature')">📷</button>
+            </div>
+            
+            <div class="looi-face">
+                <div class="face-container">
+                    <div class="eyes-row">
+                        <div class="looi-eye"></div>
+                        <div class="looi-eye"></div>
+                    </div>
+                    <div class="looi-mouth"></div>
+                </div>
+            </div>
+            
+            <div class="chat-area">
+                <p class="chat-text" id="chatText">Tap the microphone and talk to me! I can answer questions, play games, or just chat.</p>
+            </div>
+            
+            <div class="controls">
+                <button class="mic-btn" id="micBtn" onclick="toggleListening()">🎤</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; padding: 0 20px 20px;">
+                <button class="defense-btn" onclick="quickAction('play')">🎮 Play</button>
+                <button class="defense-btn" onclick="quickAction('music')">🎵 Music</button>
+                <button class="defense-btn" onclick="quickAction('fact')">💡 Fact</button>
+            </div>
+        </div>
+
+        <!-- Screen 5: Battle -->
+        <div class="screen" id="battle">
+            <div class="battle-arena">
+                <div class="grid-overlay"></div>
+                <div class="battle-robot opponent">👾</div>
+                <div class="vs-badge">VS</div>
+                <div class="battle-robot player">🤖</div>
+            </div>
+            
+            <div class="health-bars">
+                <div class="health-bar">
+                    <div class="health-label" style="color: #00d4aa;">YOU - 80%</div>
+                    <div class="health-track">
+                        <div class="health-fill" style="width: 80%; background: #00d4aa;"></div>
+                    </div>
+                </div>
+                <div class="health-bar">
+                    <div class="health-label" style="color: #ff4757;">OPPONENT - 65%</div>
+                    <div class="health-track">
+                        <div class="health-fill" style="width: 65%; background: #ff4757;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controller">
+                <div class="turn-indicator">YOUR TURN - TAP TO ATTACK</div>
+                
+                <div class="energy-bar">
+                    <span>⚡</span>
+                    <div class="energy-track">
+                        <div class="energy-fill"></div>
+                    </div>
+                    <span>60%</span>
+                </div>
+                
+                <div class="attack-buttons">
+                    <button class="attack-btn light" onclick="attack('light')">
+                        <span style="font-size: 24px;">⚡</span>
+                        <span>LIGHT<br>5-15</span>
+                    </button>
+                    <button class="attack-btn heavy" onclick="attack('heavy')">
+                        <span style="font-size: 24px;">🔥</span>
+                        <span>HEAVY<br>15-35</span>
+                    </button>
+                    <button class="attack-btn special" onclick="attack('special')">
+                        <span style="font-size: 24px;">💥</span>
+                        <span>SPECIAL<br>25-55</span>
+                    </button>
+                </div>
+                
+                <div class="defense-buttons">
+                    <button class="defense-btn" onclick="defense('block')">🛡️ BLOCK</button>
+                    <button class="defense-btn" onclick="defense('charge')">🔋 CHARGE</button>
+                </div>
+            </div>
+            
+            <button class="back-btn" onclick="goToScreen('lobby')" style="position: absolute; top: 20px; left: 20px;">←</button>
+        </div>
+
+        <!-- Screen 6: Maintenance -->
+        <div class="screen" id="maintenance">
+            <div class="maintenance-header">
+                <button class="back-btn" onclick="goToScreen('lobby')" style="position: absolute; left: 20px;">←</button>
+                <h2>DOY</h2>
+                <p style="color: #00d4aa;">Child • Level 5</p>
+            </div>
+            
+            <div class="robot-stage">
+                <div class="xp-ring"></div>
+                <div class="robot-avatar">🤖</div>
+            </div>
+            
+            <div class="stats-section">
+                <div class="stat-row">
+                    <span class="stat-icon">🍕</span>
+                    <span class="stat-name">Hunger</span>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill" style="width: 75%; background: #ff9800;"></div>
+                    </div>
+                    <span>75%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">❤️</span>
+                    <span class="stat-name">Happy</span>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill" style="width: 60%; background: #e91e63;"></div>
+                    </div>
+                    <span>60%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-name">Energy</span>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill" style="width: 85%; background: #ffeb3b;"></div>
+                    </div>
+                    <span>85%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-icon">🏥</span>
+                    <span class="stat-name">Health</span>
+                    <div class="stat-bar-bg">
+                        <div class="stat-bar-fill" style="width: 90%; background: #4caf50;"></div>
+                    </div>
+                    <span>90%</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <div class="action-btn feed" onclick="careAction('feed')">
+                    <div class="action-icon">🍕</div>
+                    <span style="color: #ff9800;">Feed</span>
+                </div>
+                <div class="action-btn play" onclick="careAction('play')">
+                    <div class="action-icon">🎮</div>
+                    <span style="color: #e91e63;">Play</span>
+                </div>
+                <div class="action-btn sleep" onclick="careAction('sleep')">
+                    <div class="action-icon">😴</div>
+                    <span style="color: #9c27b0;">Sleep</span>
+                </div>
+                <div class="action-btn style" onclick="goToScreen('wardrobe')">
+                    <div class="action-icon">👔</div>
+                    <span style="color: #2196f3;">Style</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 7: Wardrobe -->
+        <div class="screen" id="wardrobe">
+            <div class="wardrobe-header">
+                <button class="back-btn" onclick="goToScreen('maintenance')">←</button>
+                <h2>WARDROBE</h2>
+                <div class="coin-display">
+                    <span>🪙</span>
+                    <span>1,250</span>
+                </div>
+            </div>
+            
+            <div class="category-tabs">
+                <div class="category-tab active" onclick="switchTab(this, 'hats')">🎩 Hats</div>
+                <div class="category-tab" onclick="switchTab(this, 'armor')">🛡️ Armor</div>
+                <div class="category-tab" onclick="switchTab(this, 'pants')">👖 Pants</div>
+                <div class="category-tab" onclick="switchTab(this, 'shoes')">👟 Shoes</div>
+                <div class="category-tab" onclick="switchTab(this, 'masks')">😷 Masks</div>
+                <div class="category-tab" onclick="switchTab(this, 'acc')">⌚ Acc</div>
+            </div>
+            
+            <div class="items-grid" id="itemsGrid">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- Screen 8: Settings -->
+        <div class="screen" id="settings">
+            <div class="lobby-header">
+                <button class="back-btn" onclick="goToScreen('lobby')">←</button>
+                <h2>SETTINGS</h2>
+                <div style="width: 45px;"></div>
+            </div>
+            
+            <div class="settings-list">
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-icon">👋</div>
+                        <div>
+                            <div class="setting-title">Welcome Greeting</div>
+                            <div class="setting-desc">This appears when you open the app forever</div>
+                        </div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" class="input-field" id="settingsGreeting" value="Hello Boss">
+                        <button class="btn-primary" style="margin-top: 10px;" onclick="saveSettingsGreeting()">
+                            Save (Requires Restart)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-icon">👤</div>
+                        <div>
+                            <div class="setting-title">Your Name</div>
+                            <div class="setting-desc">How your robot addresses you</div>
+                        </div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" class="input-field" value="Boss">
+                    </div>
+                </div>
+                
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-icon">🔔</div>
+                        <div>
+                            <div class="setting-title">Notifications</div>
+                            <div class="setting-desc">Get alerts when robot needs care</div>
+                        </div>
+                    </div>
+                    <div class="setting-control" style="display: flex; justify-content: flex-end;">
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setting-card">
+                    <div class="setting-header">
+                        <div class="setting-icon">🔊</div>
+                        <div>
+                            <div class="setting-title">Sound Effects</div>
+                            <div class="setting-desc">Enable robot voice and sounds</div>
+                        </div>
+                    </div>
+                    <div class="setting-control" style="display: flex; justify-content: flex-end;">
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')">
+                            <div class="toggle-knob"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-controls">
+        <button class="preview-btn active" onclick="goToScreen('splash')">1. Splash</button>
+        <button class="preview-btn" onclick="goToScreen('onboarding')">2. Onboarding</button>
+        <button class="preview-btn" onclick="goToScreen('lobby')">3. Lobby</button>
+        <button class="preview-btn" onclick="goToScreen('talk')">4. Talk</button>
+        <button class="preview-btn" onclick="goToScreen('battle')">5. Battle</button>
+        <button class="preview-btn" onclick="goToScreen('maintenance')">6. Care</button>
+        <button class="preview-btn" onclick="goToScreen('wardrobe')">7. Wardrobe</button>
+        <button class="preview-btn" onclick="goToScreen('settings')">8. Settings</button>
+    </div>
+
+    <script>
+        // Wardrobe items database (100+ items)
+        const wardrobeItems = {
+            hats: [
+                {id: 'h1', emoji: '🧢', name: 'Baseball Cap', level: 1, unlocked: true, equipped: false},
+                {id: 'h2', emoji: '👑', name: 'Golden Crown', level: 50, unlocked: false, equipped: false},
+                {id: 'h3', emoji: '🎩', name: 'Wizard Hat', level: 20, unlocked: true, equipped: true},
+                {id: 'h4', emoji: '🎅', name: 'Santa Hat', level: 10, unlocked: true, equipped: false},
+                {id: 'h5', emoji: '🎉', name: 'Party Hat', level: 5, unlocked: true, equipped: false},
+                {id: 'h6', emoji: '🎓', name: 'Graduation', level: 30, unlocked: false, equipped: false},
+                {id: 'h7', emoji: '⛑️', name: 'Helmet', level: 15, unlocked: true, equipped: false},
+                {id: 'h8', emoji: '👒', name: 'Sun Hat', level: 8, unlocked: true, equipped: false},
+                {id: 'h9', emoji: '🤠', name: 'Cowboy', level: 12, unlocked: true, equipped: false},
+            ],
+            armor: [
+                {id: 'a1', emoji: '👕', name: 'T-Shirt', level: 1, unlocked: true, equipped: true},
+                {id: 'a2', emoji: '👔', name: 'Suit', level: 5, unlocked: true, equipped: false},
+                {id: 'a3', emoji: '🧥', name: 'Jacket', level: 10, unlocked: true, equipped: false},
+                {id: 'a4', emoji: '🛡️', name: 'Armor', level: 40, unlocked: false, equipped: false},
+                {id: 'a5', emoji: '🥋', name: 'Robe', level: 15, unlocked: true, equipped: false},
+                {id: 'a6', emoji: '👨‍🚀', name: 'Spacesuit', level: 35, unlocked: false, equipped: false},
+            ],
+            pants: [
+                {id: 'p1', emoji: '👖', name: 'Jeans', level: 1, unlocked: true, equipped: true},
+                {id: 'p2', emoji: '🩳', name: 'Shorts', level: 3, unlocked: true, equipped: false},
+            ],
+            shoes: [
+                {id: 's1', emoji: '👟', name: 'Sneakers', level: 1, unlocked: true, equipped: true},
+                {id: 's2', emoji: '👢', name: 'Boots', level: 8, unlocked: true, equipped: false},
+                {id: 's3', emoji: '🚀', name: 'Rocket Boots', level: 45, unlocked: false, equipped: false},
+            ],
+            masks: [
+                {id: 'm1', emoji: '🕶️', name: 'Sunglasses', level: 5, unlocked: true, equipped: false},
+                {id: 'm2', emoji: '😷', name: 'Mask', level: 1, unlocked: true, equipped: true},
+            ],
+            acc: [
+                {id: 'ac1', emoji: '⌚', name: 'Watch', level: 10, unlocked: true, equipped: false},
+                {id: 'ac2', emoji: '💍', name: 'Ring', level: 50, unlocked: false, equipped: false},
+            ]
+        };
+
+        let currentCategory = 'hats';
+        let savedGreeting = 'Hello Boss';
+
+        function goToScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            // Show target screen
+            document.getElementById(screenName).classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.preview-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.textContent.toLowerCase().includes(screenName)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Special handling
+            if(screenName === 'splash') {
+                document.getElementById('splashGreeting').textContent = savedGreeting;
+            }
+            if(screenName === 'wardrobe') {
+                renderWardrobe();
+            }
+        }
+
+        function updateGreeting(value) {
+            document.getElementById('previewGreeting').textContent = value || 'Hello Boss';
+        }
+
+        function saveGreeting() {
+            savedGreeting = document.getElementById('greetingInput').value || 'Hello Boss';
+            alert('Greeting saved: "' + savedGreeting + '"\n\nThis will be your permanent greeting. Please restart the app to apply changes.');
+            goToScreen('lobby');
+        }
+
+        function saveSettingsGreeting() {
+            savedGreeting = document.getElementById('settingsGreeting').value;
+            alert('Settings saved! Please restart your application to save the changes.\n\nThis greeting will be used forever when you open the app.');
+        }
+
+        function toggleListening() {
+            const btn = document.getElementById('micBtn');
+            const text = document.getElementById('chatText');
+            
+            btn.classList.toggle('listening');
+            
+            if(btn.classList.contains('listening')) {
+                text.textContent = "Listening... Speak now!";
+                setTimeout(() => {
+                    btn.classList.remove('listening');
+                    const responses = [
+                        "That's interesting! Tell me more.",
+                        "Beep boop! I understand, Boss!",
+                        "Wow, that's amazing! I'm learning so much from you.",
+                        "As an AI robot, I think that's fascinating!",
+                        "Can we play a game now? I'm feeling playful!"
+                    ];
+                    text.textContent = responses[Math.floor(Math.random() * responses.length)];
+                }, 2000);
+            }
+        }
+
+        function quickAction(type) {
+            const text = document.getElementById('chatText');
+            const actions = {
+                play: "Let's play! I love games. Rock paper scissors? 🎮",
+                music: "Music is wonderful! My favorite is electronic beep-boop music! 🎵",
+                fact: "Did you know? I can process 1 million calculations per second! 💡"
+            };
+            text.textContent = actions[type];
+        }
+
+        function attack(type) {
+            const damages = {
+                light: Math.floor(Math.random() * 10) + 5,
+                heavy: Math.floor(Math.random() * 20) + 15,
+                special: Math.floor(Math.random() * 30) + 25
+            };
+            alert(type.toUpperCase() + ' ATTACK! Dealt ' + damages[type] + ' damage!');
+        }
+
+        function defense(type) {
+            alert(type === 'block' ? '🛡️ Blocking! Damage reduced!' : '🔋 Charging! Energy restored!');
+        }
+
+        function careAction(type) {
+            const messages = {
+                feed: "Yum! Delicious! +10 XP 🍕",
+                play: "That was fun! +15 XP 🎮",
+                sleep: "Goodnight! +5 XP 😴"
+            };
+            alert(messages[type]);
+        }
+
+        function switchTab(tab, category) {
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentCategory = category;
+            renderWardrobe();
+        }
+
+        function renderWardrobe() {
+            const grid = document.getElementById('itemsGrid');
+            const items = wardrobeItems[currentCategory] || [];
+            
+            grid.innerHTML = items.map(item => `
+                <div class="item-card ${item.unlocked ? 'unlocked' : 'locked'} ${item.equipped ? 'equipped' : ''}" 
+                     onclick="${item.unlocked ? `equipItem('${item.id}')` : ''}">
+                    <div class="item-emoji">${item.unlocked ? item.emoji : '🔒'}</div>
+                    <div class="item-name">${item.name}</div>
+                    ${!item.unlocked ? `<div class="item-level">Lvl ${item.level}</div>` : ''}
+                    ${item.equipped ? '<div class="equipped-badge">EQUIPPED</div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function equipItem(id) {
+            // Toggle equipped state
+            const category = wardrobeItems[currentCategory];
+            const item = category.find(i => i.id === id);
+            if(item) {
+                category.forEach(i => i.equipped = false);
+                item.equipped = true;
+                renderWardrobe();
+            }
+        }
+
+        // Initialize
+        setTimeout(() => {
+            goToScreen('splash');
+        }, 100);
+
+        // Auto-advance splash after 3 seconds for demo
+        setTimeout(() => {
+            if(document.getElementById('splash').classList.contains('active')) {
+                goToScreen('onboarding');
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
